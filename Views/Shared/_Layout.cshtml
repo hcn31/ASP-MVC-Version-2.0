@@ -1,0 +1,145 @@
+﻿@using Microsoft.AspNetCore.Http
+@using AmazonCloneMVC.Models
+
+@inject IHttpContextAccessor Accessor
+@{
+    var val = 0;
+    if (Accessor.HttpContext.Session.GetCartService() != null)
+    {
+        val = Accessor.HttpContext.Session.GetCartService()._cartItems.Count();
+    }
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MonCatalogueProduit</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MonCatalogueProduit.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333; 
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+        header {
+            width: 100%;
+            background-color: #007bff; 
+            padding: 10px 0;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .nav-logo img {
+            width: 128px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-around;
+            width: 40%;
+        }
+
+        .nav-link {
+            color: #fff;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: #fff; 
+                text-decoration: underline;
+            }
+
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .cart-link {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+            .cart-link:hover {
+                color: #fff; 
+            }
+
+        .cart-count {
+            margin-left: 5px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 20px auto;
+        }
+
+        main {
+            padding-bottom: 20px;
+        }
+
+    </style>
+
+    <header>
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="/">
+                    <img src="/images/amazonLogo.png" alt="logo">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="/Produits" class="nav-link">Produits</a>
+                <a href="/Categories" class="nav-link">Categories</a>
+            </div>
+            <div class="cart-icon">
+                <a class="cart-link" href="Home/Cart">
+                    @val <img src="/images/shopping_cart.svg" width="24" class="cart-count">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

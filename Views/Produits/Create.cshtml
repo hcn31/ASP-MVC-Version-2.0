@@ -1,0 +1,96 @@
+﻿@model AmazonCloneMVC.Models.Produit
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    /* Add your custom styles here */
+    h1 {
+        color: #007bff; /* Change header color as needed */
+        text-align: center;
+        margin-top: 5rem; /* Adjust margin as needed */
+    }
+
+    h4 {
+        font-size: 1.5em; /* Change font size as needed */
+    }
+
+    .row {
+        margin-bottom: 20px; /* Adjust margin as needed */
+    }
+
+    .form-group {
+        margin-bottom: 20px; /* Adjust margin as needed */
+    }
+
+    .control-label {
+        font-weight: bold; /* Change font weight as needed */
+    }
+
+    .form-control {
+        width: 100%; /* Adjust width as needed */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Change button color as needed */
+        border-color: #007bff; /* Change border color as needed */
+    }
+
+    /* Add more custom styles as needed */
+</style>
+
+<h1>Create</h1>
+
+<h4>Produit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProduitName" class="control-label"></label>
+                <input asp-for="ProduitName" class="form-control" />
+                <span asp-validation-for="ProduitName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Prix" class="control-label"></label>
+                <input asp-for="Prix" class="form-control" />
+                <span asp-validation-for="Prix" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantite" class="control-label"></label>
+                <input asp-for="Quantite" class="form-control" />
+                <span asp-validation-for="Quantite" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input id="imagepath" title="upload image" type="file" name="file" />
+                @Html.ValidationMessageFor(model => model.ImagePath, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label asp-for="CategorieID" class="control-label"></label>
+                <select asp-for="CategorieID" class="form-control" asp-items="ViewBag.CategorieID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

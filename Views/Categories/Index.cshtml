@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AmazonCloneMVC.Models.Categorie>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #495057;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #007bff; 
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    p a {
+        color: #28a745; 
+        text-decoration: none;
+    }
+
+    .table {
+        width: 80%;
+        margin: 2rem auto;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff; 
+    }
+
+        .table th, .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6; 
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: #fff;
+            text-align: left;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1; 
+        }
+
+        .table a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            .table a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NomCategorie)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomCategorie)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CategorieID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CategorieID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CategorieID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

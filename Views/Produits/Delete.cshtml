@@ -1,0 +1,85 @@
+﻿@model AmazonCloneMVC.Models.Produit
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<style>
+    /* Add your custom styles here */
+    h1 {
+        color: #dc3545; /* Change header color as needed */
+        text-align: center;
+        margin-top: 5rem; /* Adjust margin as needed */
+    }
+
+    h3 {
+        font-size: 1.5em; /* Change font size as needed */
+    }
+
+    .row {
+        margin-bottom: 20px; /* Adjust margin as needed */
+    }
+
+    .col-sm-2 {
+        font-weight: bold; /* Change font weight as needed */
+    }
+
+    .btn-danger {
+        background-color: #dc3545; /* Change button color as needed */
+        border-color: #dc3545; /* Change border color as needed */
+    }
+
+    /* Add more custom styles as needed */
+</style>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Produit</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProduitName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProduitName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Prix)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Prix)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Quantite)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Quantite)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ImagePath)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Categorie)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Categorie.NomCategorie)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ProduitID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
