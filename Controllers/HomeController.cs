@@ -1,6 +1,7 @@
 ﻿using AmazonCloneMVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 
 namespace AmazonCloneMVC.Controllers
@@ -9,51 +10,79 @@ namespace AmazonCloneMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly MyDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public HomeController(ILogger<HomeController> logger, MyDbContext context)
+        // Constructeur avec injection de dépendances
+        public HomeController(ILogger<HomeController> logger, MyDbContext context, IMemoryCache memoryCache)
         {
             _logger = logger;
             _context = context;
+            _cache = memoryCache;
         }
 
+        // Action pour la page d'accueil
         public async Task<IActionResult> Index([Bind("searchString")] string searchString)
         {
             IEnumerable<Produit> myDbContext;
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                _logger.LogInformation("Logger!!! it sounds like someone is searchin a product that contains: {searchString}", searchString);
-                myDbContext = await _context.Produits.Include(p => p.Categorie).Where(p => p.Description.Contains(searchString)).ToListAsync();
-                if (!myDbContext.Any())
+                // Utilisation du cache pour les résultats de recherche
+                myDbContext = await _cache.GetOrCreateAsync($"SearchResults{searchString}", async entry =>
                 {
-                    _logger.LogWarning("Logger!!! No product contains the string: {searchString}", searchString);
-                
-                }
+                    // Logique de recherche
+                    _logger.LogInformation("Searching the product: {searchString}", searchString);
+
+                    var results = await _context.Produits.Include(p => p.Categorie)
+                                                           .Where(p => p.Description.Contains(searchString))
+                                                           .ToListAsync();
+
+                    // Durée d'expiration du cache
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    return results;
+                });
             }
-            else {
-                _logger.LogInformation("Logger!!! Someone has visited the home page at {DT}", DateTime.UtcNow.ToLongTimeString());
-                myDbContext = await _context.Produits.Include(p => p.Categorie).ToListAsync(); 
+            else
+            {
+                // Utilisation du cache pour tous les produits
+                myDbContext = await _cache.GetOrCreateAsync("AllProducts", async entry =>
+                {
+                    // Logique pour tous les produits
+                    var results = await _context.Produits.Include(p => p.Categorie).ToListAsync();
+
+                    // Durée d'expiration du cache
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    return results;
+                });
             }
 
             return View(myDbContext);
         }
+
+        // Action pour ajouter un produit au panier
         public async Task<IActionResult> AddToCard([Bind("ProduitId")] int ProduitId)
         {
             var product = await _context.Produits.FindAsync(ProduitId);
 
-
             if (product != null)
             {
-                _logger.LogInformation("Logger!!! Someone added a product to card at: {DT}", DateTime.UtcNow.ToLongTimeString());
+                // Logique pour ajouter un produit au panier
+                _logger.LogInformation("Product added to cart at: {DT}", DateTime.UtcNow.ToLongTimeString());
 
                 var retrievedCartService = HttpContext.Session.GetCartService();
-
                 retrievedCartService._cartItems.Add(product);
                 HttpContext.Session.SetCartService(retrievedCartService);
             }
+            else
+            {
+                // Logique si le produit est null
+                _logger.LogWarning("there is no product to be added: {DT}", DateTime.UtcNow.ToLongTimeString());
+            }
 
             return RedirectToAction(nameof(Index));
-
         }
+
+        // Action pour afficher le panier
         public IEnumerable<Produit> CartProduit;
         public IActionResult Cart()
         {
@@ -65,23 +94,26 @@ namespace AmazonCloneMVC.Controllers
             return View(CartProduit);
         }
 
+        // Action pour supprimer un produit du panier
         public IActionResult RemoveProd([Bind("prodId")] int prodId)
         {
             var retrievedCartService = HttpContext.Session.GetCartService();
             if (retrievedCartService != null)
             {
-                retrievedCartService._cartItems.Remove(retrievedCartService._cartItems.Where(pro => pro.ProduitID == prodId).First());
+                // Logique pour supprimer un produit du panier
+                retrievedCartService._cartItems.Remove(retrievedCartService._cartItems.Find(pro => pro.ProduitID == prodId));
                 HttpContext.Session.SetCartService(retrievedCartService);
-
             }
             return RedirectToAction(nameof(Index));
-
         }
+
+        // Action pour la page de confidentialité
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // Action pour gérer les erreurs
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

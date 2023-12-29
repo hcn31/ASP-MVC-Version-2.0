@@ -1,10 +1,12 @@
 ﻿using AmazonCloneMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmazonCloneMVC.Controllers
 {
+    [Authorize]
     public class ProduitsController : Controller
     {
         private readonly MyDbContext _context;

@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace AmazonCloneMVC.Models
 {
-    public class MyDbContext : DbContext
+    public class MyDbContext : IdentityDbContext
     {
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         { }
